@@ -10,9 +10,12 @@ internal class BulletController : MonoBehaviour
     public GameObject boomFx;
     private Cell[,] cells;
 
-    public void Initialize(Cell[,] cells)
+    public Tank ignoreTank;
+
+    public void Initialize(Cell[,] cells, Tank ignoreTank)
     {
         this.cells = cells;
+        this.ignoreTank = ignoreTank;
     }
 
     // Start is called before the first frame update
@@ -40,11 +43,11 @@ internal class BulletController : MonoBehaviour
         }
         if (cells[ourCell.x, ourCell.y].Occupant != null)
         {
-            var enemy = cells[ourCell.x, ourCell.y].Occupant.GetComponent<EnemyAI>();
-            if (enemy != null)
+            var tank = cells[ourCell.x, ourCell.y].Occupant.GetComponent<Tank>();
+            if (tank != null && tank != ignoreTank)
             {
                 Boooooom();
-                enemy.Die();
+                tank.Die();
                 Destroy(gameObject);
             }
         }

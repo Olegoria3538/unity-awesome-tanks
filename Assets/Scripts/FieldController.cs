@@ -36,7 +36,7 @@ public class FieldController : MonoBehaviour
         "...####...",
         "....##....",
         "..........",
-        ".........E"
+        ".....E...."
     };
 
     private Dictionary<char, CellSpace> cellVoxel = new Dictionary<char, CellSpace>()
@@ -146,7 +146,7 @@ public class FieldController : MonoBehaviour
             {
                 if (cells[x, y].Occupant is EnemyAI enemy)
                 {
-                    enemy.StartCoroutine(enemy.Think());
+                    enemy.StartCoroutine(enemy.Think(player));
                 }
             }
         }

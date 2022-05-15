@@ -15,12 +15,12 @@ namespace Assets.Scripts.Logic
         public BulletController bulletPrefab;
 
         private float moveSpeed;
-        private Cell[,] cells;
+        public Cell[,] cells;
 
-        private Vector2Int direction = Vector2Int.up;
+        public Vector2Int direction = Vector2Int.up;
 
 		public void Initialize(float moveSpeed, Cell[,] cells)
-		{
+		{                
             this.moveSpeed = moveSpeed;
             this.cells = cells;
 		}
@@ -43,7 +43,6 @@ namespace Assets.Scripts.Logic
             {
                 var oldDirection = direction;
                 var oldX = oldDirection[0];
-                Debug.Log(oldDirection);
                 direction = delta;
                 var newX = direction[0];
                 cells[tc.x, tc.y].Occupy(this);
@@ -73,7 +72,7 @@ namespace Assets.Scripts.Logic
             isMoving = false;
         }
 
-        private Vector2Int GetCoords()
+        public Vector2Int GetCoords()
         {
             Vector2Int p = default;
             for (var x = 0; x < cells.GetLength(0); x++)
@@ -94,7 +93,7 @@ namespace Assets.Scripts.Logic
             if (!isMoving)
             {
                 var bullet = Instantiate(bulletPrefab, transform.position, transform.rotation);
-                bullet.Initialize(cells);
+                bullet.Initialize(cells, this);
                 bullet.Fire(direction);
             }
         }
