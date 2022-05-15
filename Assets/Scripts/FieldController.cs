@@ -146,7 +146,7 @@ public class FieldController : MonoBehaviour
             {
                 if (cells[x, y].Occupant is EnemyAI enemy)
                 {
-                    enemy.StartCoroutine(enemy.Think(player));
+                    enemy.StartCoroutine(enemy.Think());
                 }
             }
         }
