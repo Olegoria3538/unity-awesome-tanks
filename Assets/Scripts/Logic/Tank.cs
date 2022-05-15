@@ -11,18 +11,18 @@ namespace Assets.Scripts.Logic
     internal class Tank : MonoBehaviour
     {
         public bool isMoving { get; private set; }
-
         public BulletController bulletPrefab;
-
         private float moveSpeed;
         public Cell[,] cells;
-
+        public int countKilling = 0;
         public Vector2Int direction = Vector2Int.up;
+        public FieldController fieldController;
 
-        public void Initialize(float moveSpeed, Cell[,] cells)
+        public void Initialize(float moveSpeed, Cell[,] cells, FieldController FieldController)
         {
             this.moveSpeed = moveSpeed;
             this.cells = cells;
+            fieldController = FieldController;
         }
 
         public IEnumerator TryMove(Vector2Int delta)
@@ -104,6 +104,10 @@ namespace Assets.Scripts.Logic
             var p = GetCoords();
             cells[p.x, p.y].Occupy(null);
             Destroy(gameObject);
+        }
+
+        public virtual void incrementKilling() {
+            countKilling++;
         }
     }
 }

@@ -9,5 +9,9 @@ namespace Assets.Scripts.Logic
 {
 	internal class Player : Tank
 	{
+	 	public override void incrementKilling() {
+            base.incrementKilling();
+			fieldController.countKillingPlayer++;
+        }
 	}
 }

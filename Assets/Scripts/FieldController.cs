@@ -2,6 +2,7 @@ using Assets.Scripts.Logic;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class FieldController : MonoBehaviour
 {
@@ -14,18 +15,14 @@ public class FieldController : MonoBehaviour
     public int spawnEnemy = 5;
     public float playerSpeed = 3;
     public float enemySpeed = 2;
-
+    public int countKillingPlayer = 0;
     private Cell[,] cells;
     private int width;
     private int height;
     private Player player;
-    
     private Vector2Int enemyCellSpawn;
-
     private Vector2Int playerCellSpawn;
-
     private int countSpawnEnemy = 0;
-
     private string[] map = new[] {
         "P...#F#...",
         "....###...",
@@ -36,7 +33,7 @@ public class FieldController : MonoBehaviour
         "...####...",
         "....##....",
         "..........",
-        ".....E...."
+        "....E....."
     };
 
     private Dictionary<char, CellSpace> cellVoxel = new Dictionary<char, CellSpace>()
@@ -96,22 +93,24 @@ public class FieldController : MonoBehaviour
                 var c = Instantiate(bedrockVoxel, new Vector3(x, 0, y), Quaternion.identity, transform);
                 c.SetColor((x + y) % 2 == 0);
                 if (cells[x, y].Space == CellSpace.Bedrock)
-				{
+                {
                     var bedrock = Instantiate(bedrockVoxel, new Vector3(x, 1, y), Quaternion.identity, transform);
                     cells[x, y].setVoxel(bedrock.GetComponent<GameObject>());
                 }
-                if(cells[x, y].Space == CellSpace.Destructible) {
+                if (cells[x, y].Space == CellSpace.Destructible)
+                {
                     var destructible = Instantiate(destructibleVoxel, new Vector3(x, 1, y), Quaternion.identity, transform);
                     cells[x, y].setVoxel(destructible);
                 }
-                if(cells[x, y].Space == CellSpace.Flag) {
+                if (cells[x, y].Space == CellSpace.Flag)
+                {
                     var flag = Instantiate(flagVoxel, new Vector3(x, 1, y), Quaternion.identity, transform);
                     cells[x, y].setVoxel(flag);
                 }
             }
         }
 
-        mainCamera.transform.position = new Vector3((width + 2) / 2, 13,(height + 2) / 2);
+        mainCamera.transform.position = new Vector3((width + 2) / 2, 13, (height + 2) / 2);
         mainCamera.transform.eulerAngles = new Vector3(90, 0, 0);
         InvokeRepeating("SpawnEnemy", 0f, 1f);
     }
@@ -119,29 +118,37 @@ public class FieldController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(player == null) {
-            SpawnPlayer();
+        if (countKillingPlayer >= spawnEnemy)
+        {
+            SceneManager.LoadScene("Win");
         }
 
-		if (Input.GetKeyDown(KeyCode.RightArrow))
-		{
-			StartCoroutine(player.TryMove(Vector2Int.right));
-		}
-		if (Input.GetKeyDown(KeyCode.LeftArrow))
-		{
-			StartCoroutine(player.TryMove(Vector2Int.left));
-		}
-		if (Input.GetKeyDown(KeyCode.UpArrow))
-		{
-			StartCoroutine(player.TryMove(Vector2Int.up));
-		}
-		if (Input.GetKeyDown(KeyCode.DownArrow))
-		{
-			StartCoroutine(player.TryMove(Vector2Int.down));
-		}
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (player == null)
         {
-            player.Fire();
+            SpawnPlayer();
+        }
+        else
+        {
+            if (Input.GetKeyDown(KeyCode.RightArrow))
+            {
+                StartCoroutine(player.TryMove(Vector2Int.right));
+            }
+            if (Input.GetKeyDown(KeyCode.LeftArrow))
+            {
+                StartCoroutine(player.TryMove(Vector2Int.left));
+            }
+            if (Input.GetKeyDown(KeyCode.UpArrow))
+            {
+                StartCoroutine(player.TryMove(Vector2Int.up));
+            }
+            if (Input.GetKeyDown(KeyCode.DownArrow))
+            {
+                StartCoroutine(player.TryMove(Vector2Int.down));
+            }
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                player.Fire();
+            }
         }
 
         for (var x = 0; x < cells.GetLength(0); x++)
@@ -157,18 +164,19 @@ public class FieldController : MonoBehaviour
     }
 
     void SpawnEnemy()
-    {   
+    {
         var x = enemyCellSpawn[0];
         var y = enemyCellSpawn[1];
-        if(cells[x, y].Occupant != null) {
-            return ;
+        if (cells[x, y].Occupant != null)
+        {
+            return;
         }
         var enemyGO = Instantiate(enemyPrefab, new Vector3(x, 1, y), Quaternion.identity, transform);
         var e = enemyGO.GetComponent<EnemyAI>();
-        e.Initialize(enemySpeed, cells);
+        e.Initialize(enemySpeed, cells, this);
         cells[x, y].Occupy(e);
         countSpawnEnemy++;
-        if(countSpawnEnemy >= spawnEnemy)
+        if (countSpawnEnemy >= spawnEnemy)
         {
             CancelInvoke("SpawnEnemy");
         }
@@ -180,7 +188,7 @@ public class FieldController : MonoBehaviour
         var y = playerCellSpawn[1];
         var playerGO = Instantiate(playerPrefab, new Vector3(x, 1, y), Quaternion.identity, transform);
         player = playerGO.GetComponent<Player>();
-        player.Initialize(playerSpeed, cells);
+        player.Initialize(playerSpeed, cells, this);
         cells[x, y].Occupy(player);
     }
 }
