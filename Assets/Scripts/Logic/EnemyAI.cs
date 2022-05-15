@@ -19,8 +19,7 @@ namespace Assets.Scripts.Logic
                 Vector2Int.left, Vector2Int.right, Vector2Int.up, Vector2Int.down
             };
             IsPlayerFront();
-            // yield return TryMove(whereToMove[UnityEngine.Random.Range(0, whereToMove.Count)]);
-			yield return TryMove(new Vector2Int(0, 0));
+            yield return TryMove(whereToMove[UnityEngine.Random.Range(0, whereToMove.Count)]);
         }
 
         private void IsPlayerFront()
@@ -34,7 +33,7 @@ namespace Assets.Scripts.Logic
             {
                 for (var i = x; i < cells.GetLength(0); i++)
                 {
-					StartCoroutine(IsPlayerFire(i, y));
+                    StartCoroutine(IsPlayerFire(i, y));
                 }
             }
             if (dX == -1)
@@ -62,17 +61,19 @@ namespace Assets.Scripts.Logic
 
         private IEnumerator IsPlayerFire(int x, int y)
         {
-            if (enableFire && cells[x, y].Occupant != null)
+            var flag =
+				enableFire &&
+                (((cells[x, y].Occupant != null) && (cells[x, y].Occupant.GetComponent<Player>() != null))
+                || cells[x, y].Space == CellSpace.Flag);
+
+            if (flag)
             {
-                if (cells[x, y].Occupant.GetComponent<Player>() != null)
-                {
-					enableFire = false;
-                    Fire();
-					yield return new WaitForSeconds(15);
-					enableFire = true;
-                }
+                enableFire = false;
+                Fire();
+                yield return new WaitForSeconds(15);
+                enableFire = true;
             }
-			yield break;
+            yield break;
         }
     }
 }

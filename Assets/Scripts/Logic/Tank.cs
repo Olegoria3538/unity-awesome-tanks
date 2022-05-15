@@ -8,9 +8,9 @@ using UnityEngine;
 
 namespace Assets.Scripts.Logic
 {
-	internal class Tank : MonoBehaviour
-	{
-	    public bool isMoving { get; private set; }
+    internal class Tank : MonoBehaviour
+    {
+        public bool isMoving { get; private set; }
 
         public BulletController bulletPrefab;
 
@@ -19,11 +19,11 @@ namespace Assets.Scripts.Logic
 
         public Vector2Int direction = Vector2Int.up;
 
-		public void Initialize(float moveSpeed, Cell[,] cells)
-		{                
+        public void Initialize(float moveSpeed, Cell[,] cells)
+        {
             this.moveSpeed = moveSpeed;
             this.cells = cells;
-		}
+        }
 
         public IEnumerator TryMove(Vector2Int delta)
         {
@@ -60,7 +60,8 @@ namespace Assets.Scripts.Logic
                     t += Time.deltaTime;
                     gameObject.transform.position = currentPosition + (t / moveTime) * (targetPosition - currentPosition);
                     var f = Mathf.Min(1, 2 * t / moveTime);
-                    if(!(oldX == -1 && newX == -1)) {
+                    if (!(oldX == -1 && newX == -1))
+                    {
                         gameObject.transform.eulerAngles = currentRotation + f * (targetRotation - currentRotation);
                     }
                     yield return null;
@@ -90,16 +91,15 @@ namespace Assets.Scripts.Logic
 
         public void Fire()
         {
-            if (!isMoving)
-            {
-                var bullet = Instantiate(bulletPrefab, transform.position, transform.rotation);
-                bullet.Initialize(cells, this);
-                bullet.Fire(direction);
-            }
+
+            var bullet = Instantiate(bulletPrefab, transform.position, transform.rotation);
+            bullet.Initialize(cells, this);
+            bullet.Fire(direction);
+
         }
 
         public void Die()
-        { 
+        {
             StopAllCoroutines();
             var p = GetCoords();
             cells[p.x, p.y].Occupy(null);

@@ -11,7 +11,7 @@ public class FieldController : MonoBehaviour
     public GameObject playerPrefab;
     public GameObject enemyPrefab;
     public GameObject mainCamera;
-
+    public int spawnEnemy = 5;
     public float playerSpeed = 3;
     public float enemySpeed = 2;
 
@@ -164,7 +164,7 @@ public class FieldController : MonoBehaviour
         e.Initialize(enemySpeed, cells);
         cells[x, y].Occupy(e);
         countSpawnEnemy++;
-        if(countSpawnEnemy >= 0)
+        if(countSpawnEnemy >= spawnEnemy)
         {
             CancelInvoke("SpawnEnemy");
         }
