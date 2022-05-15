@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: bfc06d462391c31478cbaddf5b022229
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - bedrockVoxel: {instanceID: 0}
+  - playerPrefab: {instanceID: 0}
+  - enemyPrefab: {instanceID: 0}
+  - mainCamera: {instanceID: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
