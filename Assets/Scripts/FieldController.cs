@@ -119,6 +119,10 @@ public class FieldController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if(player == null) {
+            SpawnPlayer();
+        }
+
 		if (Input.GetKeyDown(KeyCode.RightArrow))
 		{
 			StartCoroutine(player.TryMove(Vector2Int.right));

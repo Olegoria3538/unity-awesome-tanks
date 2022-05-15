@@ -46,6 +46,8 @@ internal class BulletController : MonoBehaviour
             var tank = cells[ourCell.x, ourCell.y].Occupant.GetComponent<Tank>();
             if (tank != null && tank != ignoreTank)
             {
+                cells[ourCell.x, ourCell.y].SetCell(CellSpace.Empty);
+                cells[ourCell.x, ourCell.y].Occupy(null);
                 Boooooom();
                 tank.Die();
                 Destroy(gameObject);
