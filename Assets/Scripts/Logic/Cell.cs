@@ -11,7 +11,8 @@ namespace Assets.Scripts.Logic
 	{
 		Empty,
 		Bedrock,
-		Destructible
+		Destructible,
+		Flag
 	}
 
 	internal class Cell

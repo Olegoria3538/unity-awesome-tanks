@@ -30,7 +30,8 @@ internal class BulletController : MonoBehaviour
         if (cells[ourCell.x, ourCell.y].Space != CellSpace.Empty)
         {
             Destroy(gameObject);
-            if(cells[ourCell.x, ourCell.y].Space == CellSpace.Destructible)
+            if(cells[ourCell.x, ourCell.y].Space == CellSpace.Destructible || 
+                cells[ourCell.x, ourCell.y].Space == CellSpace.Flag)
             {  
                 var fx = boomFx.GetComponentInChildren<ParticleSystem>();
                 Instantiate(fx, transform.position, Quaternion.identity);

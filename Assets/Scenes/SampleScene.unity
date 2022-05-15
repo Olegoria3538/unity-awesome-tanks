@@ -330,6 +330,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bedrockVoxel: {fileID: 5184123424708852449, guid: de545211d4e6d3f4cb48ab5a781b8bb6, type: 3}
   destructibleVoxel: {fileID: 4475095065837084504, guid: f06672950c3cdec489525dd4d16d14c5, type: 3}
+  flagVoxel: {fileID: 4475095065837084504, guid: 1220f9dcf9cac1a4492e60c03ab2bbd9, type: 3}
   playerPrefab: {fileID: 1552909550251392393, guid: 7296fed94b313c644ba3dd4225f5fd9f, type: 3}
   enemyPrefab: {fileID: 1552909550251392393, guid: 9d635e0a75fd5e248aad04fa1b16db2d, type: 3}
   mainCamera: {fileID: 963194225}

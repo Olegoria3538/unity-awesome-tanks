@@ -7,6 +7,7 @@ public class FieldController : MonoBehaviour
 {
     public GroundChessBoard bedrockVoxel;
     public GameObject destructibleVoxel;
+    public GameObject flagVoxel;
     public GameObject playerPrefab;
     public GameObject enemyPrefab;
     public GameObject mainCamera;
@@ -21,10 +22,12 @@ public class FieldController : MonoBehaviour
     
     private Vector2Int enemyCellSpawn;
 
+    private Vector2Int playerCellSpawn;
+
     private int countSpawnEnemy = 0;
 
     private string[] map = new[] {
-        "P...#.#...",
+        "P...#F#...",
         "....###...",
         "..........",
         "....##....",
@@ -34,6 +37,16 @@ public class FieldController : MonoBehaviour
         "....##....",
         "..........",
         ".........E"
+    };
+
+    private Dictionary<char, CellSpace> cellVoxel = new Dictionary<char, CellSpace>()
+    {
+        { '$', CellSpace.Bedrock },
+        { '#', CellSpace.Destructible },
+        { 'F', CellSpace.Flag },
+        { 'E', CellSpace.Empty },
+        { 'P', CellSpace.Empty },
+        { '.', CellSpace.Empty }
     };
 
     void Start()
@@ -51,13 +64,11 @@ public class FieldController : MonoBehaviour
             }
             for (int j = 0; j < width; j++)
             {
-                cells[j + 1, i + 1] = new Cell(map[i][j] == '#' ? CellSpace.Destructible : CellSpace.Empty);
+                cells[j + 1, i + 1] = new Cell(cellVoxel[map[i][j]]);
                 if (map[i][j] == 'P')
                 {
-                    var playerGO = Instantiate(playerPrefab, new Vector3(j + 1, 1, i + 1), Quaternion.identity, transform);
-                    player = playerGO.GetComponent<Player>();
-                    player.Initialize(playerSpeed, cells);
-                    cells[j + 1, i + 1].Occupy(player);
+                    playerCellSpawn = new Vector2Int(j + 1, i + 1);
+                    SpawnPlayer();
                 }
                 if (map[i][j] == 'E')
                 {
@@ -84,7 +95,6 @@ public class FieldController : MonoBehaviour
             {
                 var c = Instantiate(bedrockVoxel, new Vector3(x, 0, y), Quaternion.identity, transform);
                 c.SetColor((x + y) % 2 == 0);
-
                 if (cells[x, y].Space == CellSpace.Bedrock)
 				{
                     var bedrock = Instantiate(bedrockVoxel, new Vector3(x, 1, y), Quaternion.identity, transform);
@@ -94,10 +104,14 @@ public class FieldController : MonoBehaviour
                     var destructible = Instantiate(destructibleVoxel, new Vector3(x, 1, y), Quaternion.identity, transform);
                     cells[x, y].setVoxel(destructible);
                 }
+                if(cells[x, y].Space == CellSpace.Flag) {
+                    var flag = Instantiate(flagVoxel, new Vector3(x, 1, y), Quaternion.identity, transform);
+                    cells[x, y].setVoxel(flag);
+                }
             }
         }
 
-        mainCamera.transform.position = new Vector3((width + 2) / 2, 10,(height + 2) / 2);
+        mainCamera.transform.position = new Vector3((width + 2) / 2, 13,(height + 2) / 2);
         mainCamera.transform.eulerAngles = new Vector3(90, 0, 0);
         InvokeRepeating("SpawnEnemy", 0f, 1f);
     }
@@ -154,5 +168,15 @@ public class FieldController : MonoBehaviour
         {
             CancelInvoke("SpawnEnemy");
         }
+    }
+
+    void SpawnPlayer()
+    {
+        var x = playerCellSpawn[0];
+        var y = playerCellSpawn[1];
+        var playerGO = Instantiate(playerPrefab, new Vector3(x, 1, y), Quaternion.identity, transform);
+        player = playerGO.GetComponent<Player>();
+        player.Initialize(playerSpeed, cells);
+        cells[x, y].Occupy(player);
     }
 }
