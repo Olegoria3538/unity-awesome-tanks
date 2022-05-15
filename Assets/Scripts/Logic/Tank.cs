@@ -33,7 +33,6 @@ namespace Assets.Scripts.Logic
             }
 
             isMoving = true;
-            direction = delta;
 
             var rotationY = Vector2.SignedAngle(Vector2.up, delta * new Vector2Int(-1, 1));
             var from = GetCoords();
@@ -42,6 +41,11 @@ namespace Assets.Scripts.Logic
             var targetCell = cells[tc.x, tc.y];
             if (targetCell.Occupant == null && targetCell.Space == CellSpace.Empty)
             {
+                var oldDirection = direction;
+                var oldX = oldDirection[0];
+                Debug.Log(oldDirection);
+                direction = delta;
+                var newX = direction[0];
                 cells[tc.x, tc.y].Occupy(this);
                 cells[from.x, from.y].Occupy(null);
                 var currentPosition = new Vector3(from.x, 1, from.y);
@@ -56,9 +60,10 @@ namespace Assets.Scripts.Logic
                 {
                     t += Time.deltaTime;
                     gameObject.transform.position = currentPosition + (t / moveTime) * (targetPosition - currentPosition);
-
                     var f = Mathf.Min(1, 2 * t / moveTime);
-                    gameObject.transform.eulerAngles = currentRotation + f * (targetRotation - currentRotation);
+                    if(!(oldX == -1 && newX == -1)) {
+                        gameObject.transform.eulerAngles = currentRotation + f * (targetRotation - currentRotation);
+                    }
                     yield return null;
                 }
                 gameObject.transform.position = targetPosition;

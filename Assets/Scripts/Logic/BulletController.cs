@@ -33,9 +33,7 @@ internal class BulletController : MonoBehaviour
             if(cells[ourCell.x, ourCell.y].Space == CellSpace.Destructible || 
                 cells[ourCell.x, ourCell.y].Space == CellSpace.Flag)
             {  
-                var fx = boomFx.GetComponentInChildren<ParticleSystem>();
-                Instantiate(fx, transform.position, Quaternion.identity);
-                fx.Play();
+                Boooooom();
                 Destroy(cells[ourCell.x, ourCell.y].Voxel);
                 cells[ourCell.x, ourCell.y].SetCell(CellSpace.Empty);
             }
@@ -45,13 +43,18 @@ internal class BulletController : MonoBehaviour
             var enemy = cells[ourCell.x, ourCell.y].Occupant.GetComponent<EnemyAI>();
             if (enemy != null)
             {
-                var fx = boomFx.GetComponentInChildren<ParticleSystem>();
-                Instantiate(fx, transform.position, Quaternion.identity);
-                fx.Play();
+                Boooooom();
                 enemy.Die();
                 Destroy(gameObject);
             }
         }
+    }
+
+    void Boooooom()
+    {
+        var fx = boomFx.GetComponentInChildren<ParticleSystem>();
+        Instantiate(fx, transform.position, Quaternion.identity);
+        fx.Play();
     }
 
     public void Fire(Vector2Int direction)

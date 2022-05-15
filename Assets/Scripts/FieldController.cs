@@ -164,7 +164,7 @@ public class FieldController : MonoBehaviour
         e.Initialize(enemySpeed, cells);
         cells[x, y].Occupy(e);
         countSpawnEnemy++;
-        if(countSpawnEnemy >= 5)
+        if(countSpawnEnemy >= 0)
         {
             CancelInvoke("SpawnEnemy");
         }
