@@ -334,8 +334,10 @@ MonoBehaviour:
   playerPrefab: {fileID: 1552909550251392393, guid: 7296fed94b313c644ba3dd4225f5fd9f, type: 3}
   enemyPrefab: {fileID: 1552909550251392393, guid: 9d635e0a75fd5e248aad04fa1b16db2d, type: 3}
   mainCamera: {fileID: 963194225}
+  spawnEnemy: 5
   playerSpeed: 3
   enemySpeed: 2
+  countKillingPlayer: 0
 --- !u!4 &2056769894
 Transform:
   m_ObjectHideFlags: 0

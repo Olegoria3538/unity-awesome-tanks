@@ -21,7 +21,7 @@ internal class BulletController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
@@ -33,9 +33,9 @@ internal class BulletController : MonoBehaviour
         if (cells[ourCell.x, ourCell.y].Space != CellSpace.Empty)
         {
             Destroy(gameObject);
-            if(cells[ourCell.x, ourCell.y].Space == CellSpace.Destructible || 
+            if (cells[ourCell.x, ourCell.y].Space == CellSpace.Destructible ||
                 cells[ourCell.x, ourCell.y].Space == CellSpace.Flag)
-            {  
+            {
                 Boooooom();
                 Destroy(cells[ourCell.x, ourCell.y].Voxel);
                 cells[ourCell.x, ourCell.y].SetCell(CellSpace.Empty);
@@ -56,6 +56,10 @@ internal class BulletController : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Instantiates a particle system at the position of the object that has this script
+    /// attached to it
+    /// </summary>
     void Boooooom()
     {
         var fx = boomFx.GetComponentInChildren<ParticleSystem>();

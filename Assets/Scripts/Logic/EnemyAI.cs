@@ -22,6 +22,7 @@ namespace Assets.Scripts.Logic
             yield return TryMove(whereToMove[UnityEngine.Random.Range(0, whereToMove.Count)]);
         }
 
+        /* Checking if the player or flag is in front of the enemy. */
         private void IsPlayerFront()
         {
             var coo = GetCoords();
@@ -33,33 +34,33 @@ namespace Assets.Scripts.Logic
             {
                 for (var i = x; i < cells.GetLength(0); i++)
                 {
-                    StartCoroutine(IsPlayerFire(i, y));
+                    StartCoroutine(FireWait(i, y));
                 }
             }
             if (dX == -1)
             {
                 for (var i = x; i >= 0; i--)
                 {
-                    StartCoroutine(IsPlayerFire(i, y));
+                    StartCoroutine(FireWait(i, y));
                 }
             }
             if (dY == 1)
             {
                 for (var i = y; i < cells.GetLength(1); i++)
                 {
-                    StartCoroutine(IsPlayerFire(x, i));
+                    StartCoroutine(FireWait(x, i));
                 }
             }
             if (dY == -1)
             {
                 for (var i = y; i >= 0; i--)
                 {
-                    StartCoroutine(IsPlayerFire(x, i));
+                    StartCoroutine(FireWait(x, i));
                 }
             }
         }
 
-        private IEnumerator IsPlayerFire(int x, int y)
+        private IEnumerator FireWait(int x, int y)
         {
             var flag =
 				enableFire &&

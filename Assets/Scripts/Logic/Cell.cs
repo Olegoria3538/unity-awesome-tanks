@@ -19,7 +19,7 @@ namespace Assets.Scripts.Logic
 	{
 		public CellSpace Space { get; private set; }
 		public Tank Occupant;
-		public UnityEngine.GameObject Voxel;
+		public GameObject Voxel;
 
 
 		public Cell(CellSpace space)
@@ -31,7 +31,7 @@ namespace Assets.Scripts.Logic
 		{
 			Occupant = occupant;
 		}
-		public void setVoxel(UnityEngine.GameObject voxel)
+		public void setVoxel(GameObject voxel)
 		{
 			Voxel = voxel;
 		}

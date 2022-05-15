@@ -9,7 +9,10 @@ namespace Assets.Scripts.Logic
 {
 	internal class Player : Tank
 	{
-	 	public override void incrementKilling() {
+	 	/// <summary>
+		 /// The function is called when the player kills an enemy. It increments the number of kills by one
+		 /// </summary>
+		 public override void incrementKilling() {
             base.incrementKilling();
 			fieldController.countKillingPlayer++;
         }

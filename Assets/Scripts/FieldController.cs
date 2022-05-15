@@ -22,6 +22,7 @@ public class FieldController : MonoBehaviour
     private Player player;
     private Vector2Int enemyCellSpawn;
     private Vector2Int playerCellSpawn;
+    private Vector2Int flagCellSpawn;
     private int countSpawnEnemy = 0;
     private string[] map = new[] {
         "P...#F#...",
@@ -106,6 +107,7 @@ public class FieldController : MonoBehaviour
                 {
                     var flag = Instantiate(flagVoxel, new Vector3(x, 1, y), Quaternion.identity, transform);
                     cells[x, y].setVoxel(flag);
+                    flagCellSpawn = new Vector2Int(x, y);
                 }
             }
         }
@@ -121,6 +123,10 @@ public class FieldController : MonoBehaviour
         if (countKillingPlayer >= spawnEnemy)
         {
             SceneManager.LoadScene("Win");
+        }
+        if (!cells[flagCellSpawn[0], flagCellSpawn[1]].Voxel)
+        {
+            SceneManager.LoadScene("Lost");
         }
 
         if (player == null)
@@ -163,6 +169,9 @@ public class FieldController : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// If the cell is not occupied, spawn an enemy at the cell, and occupy the cell with the enemy.
+    /// </summary>
     void SpawnEnemy()
     {
         var x = enemyCellSpawn[0];
@@ -182,6 +191,10 @@ public class FieldController : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// We're instantiating a player prefab at the position of the player spawn point, and then we're
+    /// initializing the player with the speed, cells, and the game manager
+    /// </summary>
     void SpawnPlayer()
     {
         var x = playerCellSpawn[0];
