@@ -333,8 +333,9 @@ MonoBehaviour:
   flagVoxel: {fileID: 4475095065837084504, guid: 1220f9dcf9cac1a4492e60c03ab2bbd9, type: 3}
   playerPrefab: {fileID: 1552909550251392393, guid: 7296fed94b313c644ba3dd4225f5fd9f, type: 3}
   enemyPrefab: {fileID: 1552909550251392393, guid: 9d635e0a75fd5e248aad04fa1b16db2d, type: 3}
+  flagWall: {fileID: 4475095065837084504, guid: 9ec0779beb6c7c04aae82c8dbfc35ef3, type: 3}
   mainCamera: {fileID: 963194225}
-  spawnEnemy: 1
+  spawnEnemy: 5
   playerSpeed: 3
   enemySpeed: 2
   countKillingPlayer: 0

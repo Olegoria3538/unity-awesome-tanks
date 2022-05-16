@@ -11,11 +11,13 @@ public class FieldController : MonoBehaviour
     public GameObject flagVoxel;
     public GameObject playerPrefab;
     public GameObject enemyPrefab;
+    public GameObject flagWall;
     public GameObject mainCamera;
     public int spawnEnemy = 5;
     public float playerSpeed = 3;
     public float enemySpeed = 2;
-    public int countKillingPlayer = 0;
+    public float respawnTime = 15;
+    private int countKillingPlayer = 0;
     private Cell[,] cells;
     private int width;
     private int height;
@@ -25,16 +27,16 @@ public class FieldController : MonoBehaviour
     private Vector2Int flagCellSpawn;
     private int countSpawnEnemy = 0;
     private string[] map = new[] {
-        "P...#F#...",
+        "P...&F&...",
+        "....&&&...",
+        "..........",
+        "..........",
+        "...###....",
+        "...####...",
         "....###...",
         "..........",
-        "....##....",
-        "...####...",
-        "...####...",
-        "...####...",
-        "....##....",
         "..........",
-        "....E....."
+        ".........E"
     };
 
     private Dictionary<char, CellSpace> cellVoxel = new Dictionary<char, CellSpace>()
@@ -44,7 +46,8 @@ public class FieldController : MonoBehaviour
         { 'F', CellSpace.Flag },
         { 'E', CellSpace.Empty },
         { 'P', CellSpace.Empty },
-        { '.', CellSpace.Empty }
+        { '.', CellSpace.Empty },
+        { '&', CellSpace.FlagWall }
     };
 
     void Start()
@@ -109,13 +112,18 @@ public class FieldController : MonoBehaviour
                     cells[x, y].setVoxel(flag);
                     flagCellSpawn = new Vector2Int(x, y);
                 }
+                if (cells[x, y].Space == CellSpace.FlagWall)
+                {
+                    var destructible = Instantiate(flagWall, new Vector3(x, 1, y), Quaternion.identity, transform);
+                    cells[x, y].setVoxel(destructible);
+                }
             }
         }
 
         mainCamera.transform.position = new Vector3((width + 2) / 2, 13, (height + 2) / 2);
         mainCamera.transform.eulerAngles = new Vector3(90, 0, 0);
         if (spawnEnemy > 0)
-            InvokeRepeating("SpawnEnemy", 0f, 1f);
+            InvokeRepeating("SpawnEnemy", 0f,  (float)respawnTime);
     }
 
     // Update is called once per frame
@@ -190,6 +198,10 @@ public class FieldController : MonoBehaviour
         {
             CancelInvoke("SpawnEnemy");
         }
+    }
+
+    public void incrementKilling() {
+        countKillingPlayer++;
     }
 
     /// <summary>

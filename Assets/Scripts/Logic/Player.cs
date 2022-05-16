@@ -14,7 +14,7 @@ namespace Assets.Scripts.Logic
 		 /// </summary>
 		 public override void incrementKilling() {
             base.incrementKilling();
-			fieldController.countKillingPlayer++;
+			fieldController.incrementKilling();
         }
 	}
 }

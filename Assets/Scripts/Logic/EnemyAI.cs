@@ -11,7 +11,6 @@ namespace Assets.Scripts.Logic
     internal class EnemyAI : Tank
     {
         private bool enableFire = true;
-        private float waitMove = 0.3f;
 
 
         public void Think()
@@ -21,7 +20,7 @@ namespace Assets.Scripts.Logic
                 Vector2Int.left, Vector2Int.right, Vector2Int.up, Vector2Int.down
             };
             FireIsPlayerFront();
-            var playerCoo = getPlayerCoo();
+            var playerCoo = getTargetCoo();
             int[,] cMap = findWave(playerCoo);
             // yield return move(cMap, playerCoo);
             StartCoroutine(move(cMap, playerCoo));
@@ -85,8 +84,7 @@ namespace Assets.Scripts.Logic
             yield break;
         }
 
-        //Ищем путь к врагу
-        //TargetX, TargetY - координаты ближайшего врага
+        //Ищем путь к таргет координатам
         public int[,] findWave(Vector2Int targetCoo)
         {
             var targetX = targetCoo[0];
@@ -94,8 +92,8 @@ namespace Assets.Scripts.Logic
             bool add = true;
             // условие выхода из цикла
             // делаем копию карты локации, для дальнейшей ее разметки
-            var cMap = CellsToInt();
-            var cMap2 = CellsToInt();
+            var cMap = GetWallMap();
+            var cMap2 = GetWallMap();
 
             var currentPosition = GetCoords();
 
@@ -144,11 +142,9 @@ namespace Assets.Scripts.Logic
             return cMap; // возвращаем помеченную матрицу, для востановления пути в методе move()
         }
 
-        /// <summary>РЕАЛИЗАЦИЯ ВОЛНОВОГО АЛГОРИТМА
+        /// <summary>
+        /// РЕАЛИЗАЦИЯ ВОЛНОВОГО АЛГОРИТМА
         ///	</summary>
-        /// <param name="cMap">Копия карты локации</param>
-        /// <param name="targetX">координата цели x</param>
-        /// <param name="targetY">координата цели y</param>
         private IEnumerator move(int[,] cMap, Vector2Int targetCoo)
         {
             var targetX = targetCoo[0];
@@ -162,7 +158,6 @@ namespace Assets.Scripts.Logic
             neighbors[1] = cMap[currentPosition.x - 1, currentPosition.y];
             neighbors[2] = cMap[currentPosition.x, currentPosition.y - 1];
             neighbors[3] = cMap[currentPosition.x + 1, currentPosition.y];
-
             if (neighbors.Max() > 0)
             {
                 for (int i = 0; i < 4; i++)
@@ -181,38 +176,56 @@ namespace Assets.Scripts.Logic
                 if (minIndex == 3)
                     direction = new Vector2Int(1, 0);
             }
-
             yield return TryMove(direction);
         }
 
-        private int[,] CellsToInt()
+        private int[,] GetWallMap()
         {
             int[,] cMap = new int[cells.GetLength(0), cells.GetLength(1)];
             for (var x = 0; x < cells.GetLength(0); x++)
             {
                 for (var y = 0; y < cells.GetLength(1); y++)
                 {
-                    cMap[x, y] = (cells[x, y].Space == CellSpace.Bedrock)
-                    || (cells[x, y].Space == CellSpace.Destructible) ? 1 : 0;
+                    if (cells[x, y].Space == CellSpace.Bedrock)
+                        cMap[x, y] = 1;
+                    else if (cells[x, y].Space == CellSpace.Destructible)
+                        cMap[x, y] = 1;
+                    else if (cells[x, y].Occupant != null)
+                        cMap[x, y] = 1;
+                    else
+                        cMap[x, y] = 0;
                 }
             }
             return cMap;
         }
 
-        private Vector2Int getPlayerCoo()
+        private Vector2Int getTargetCoo()
         {
-            Vector2Int p = default;
+            var currentPosition = GetCoords();
+            Vector2Int flagCoo = default;
+            Vector2Int playerCoo = default;
             for (var x = 0; x < cells.GetLength(0); x++)
             {
                 for (var y = 0; y < cells.GetLength(1); y++)
                 {
+                    if (cells[x, y].Space == CellSpace.Flag)
+                    {
+                        flagCoo = new Vector2Int(x, y);
+                    }
                     if (cells[x, y].Occupant != null && cells[x, y].Occupant.GetComponent<Player>() != null)
                     {
-                        p = new Vector2Int(x, y);
+                        playerCoo = new Vector2Int(x, y);
                     }
                 }
             }
-            return p;
+            float[] kek = new float[] {
+                (flagCoo - currentPosition).magnitude,
+                (playerCoo - currentPosition).magnitude
+            };
+            
+            int minIndex = Array.IndexOf(kek, kek.Min());
+            if (minIndex == 0) return flagCoo;
+            else return playerCoo;
         }
     }
 }

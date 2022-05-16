@@ -33,8 +33,9 @@ internal class BulletController : MonoBehaviour
         if (cells[ourCell.x, ourCell.y].Space != CellSpace.Empty)
         {
             Destroy(gameObject);
-            if (cells[ourCell.x, ourCell.y].Space == CellSpace.Destructible ||
-                cells[ourCell.x, ourCell.y].Space == CellSpace.Flag)
+            if (cells[ourCell.x, ourCell.y].Space == CellSpace.Destructible
+                || cells[ourCell.x, ourCell.y].Space == CellSpace.FlagWall
+                || cells[ourCell.x, ourCell.y].Space == CellSpace.Flag)
             {
                 Boooooom();
                 Destroy(cells[ourCell.x, ourCell.y].Voxel);
