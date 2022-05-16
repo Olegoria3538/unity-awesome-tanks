@@ -222,10 +222,17 @@ namespace Assets.Scripts.Logic
                 (flagCoo - currentPosition).magnitude,
                 (playerCoo - currentPosition).magnitude
             };
-            
+
             int minIndex = Array.IndexOf(kek, kek.Min());
             if (minIndex == 0) return flagCoo;
             else return playerCoo;
+        }
+
+        public override void Killing(Tank occupant)
+        {
+            base.Killing(occupant);
+            if (occupant.GetComponent<EnemyAI>() != null)
+                fieldController.incrementKilling();
         }
     }
 }

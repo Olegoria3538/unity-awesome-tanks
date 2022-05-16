@@ -50,9 +50,10 @@ internal class BulletController : MonoBehaviour
                 cells[ourCell.x, ourCell.y].SetCell(CellSpace.Empty);
                 cells[ourCell.x, ourCell.y].Occupy(null);
                 Boooooom();
+                selfTank.Killing(tank);
                 tank.Die();
                 Destroy(gameObject);
-                selfTank.incrementKilling();
+
             }
         }
     }

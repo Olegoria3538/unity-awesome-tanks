@@ -106,7 +106,8 @@ namespace Assets.Scripts.Logic
             Destroy(gameObject);
         }
 
-        public virtual void incrementKilling() {
+        public virtual void Killing(Tank occupant)
+        {
             countKilling++;
         }
     }
