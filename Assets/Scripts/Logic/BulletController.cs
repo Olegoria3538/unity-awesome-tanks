@@ -65,7 +65,8 @@ internal class BulletController : MonoBehaviour
     void Boooooom()
     {
         var fx = boomFx.GetComponentInChildren<ParticleSystem>();
-        Instantiate(fx, transform.position, Quaternion.identity);
+        var rotationY = Vector2.SignedAngle(Vector2.up, direction * new Vector2Int(-1, 1));
+        var fxInstance = Instantiate(fx, transform.position, Quaternion.Euler(new Vector3(90, 0, -rotationY)));
         fx.Play();
     }
 
