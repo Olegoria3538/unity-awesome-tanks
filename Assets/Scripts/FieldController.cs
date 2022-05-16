@@ -114,7 +114,8 @@ public class FieldController : MonoBehaviour
 
         mainCamera.transform.position = new Vector3((width + 2) / 2, 13, (height + 2) / 2);
         mainCamera.transform.eulerAngles = new Vector3(90, 0, 0);
-        InvokeRepeating("SpawnEnemy", 0f, 1f);
+        if (spawnEnemy > 0)
+            InvokeRepeating("SpawnEnemy", 0f, 1f);
     }
 
     // Update is called once per frame
@@ -163,7 +164,7 @@ public class FieldController : MonoBehaviour
             {
                 if (cells[x, y].Occupant is EnemyAI enemy)
                 {
-                    enemy.StartCoroutine(enemy.Think());
+                    enemy.Think();
                 }
             }
         }
