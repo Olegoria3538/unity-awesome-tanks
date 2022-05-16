@@ -91,8 +91,10 @@ namespace Assets.Scripts.Logic
 
         public void Fire()
         {
-
+            var rotationY = Vector2.SignedAngle(Vector2.up, direction * new Vector2Int(-1, 1));
+            var targetRotation = new Vector3(0, rotationY, 0);
             var bullet = Instantiate(bulletPrefab, transform.position, transform.rotation);
+            bullet.transform.eulerAngles = targetRotation;
             bullet.Initialize(cells, this);
             bullet.Fire(direction);
 
