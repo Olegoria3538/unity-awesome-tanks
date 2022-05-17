@@ -39,36 +39,43 @@ namespace Assets.Scripts.Logic
             var tc = from + delta;
 
             var targetCell = cells[tc.x, tc.y];
-            if (targetCell.Occupant == null && targetCell.Space == CellSpace.Empty)
+            var isEmpty = targetCell.Occupant == null && targetCell.Space == CellSpace.Empty;
+
+
+
+            var oldDirection = direction;
+            var oldX = oldDirection[0];
+            direction = delta;
+            var newX = direction[0];
+            
+            if (isEmpty)
             {
-                var oldDirection = direction;
-                var oldX = oldDirection[0];
-                direction = delta;
-                var newX = direction[0];
                 cells[tc.x, tc.y].Occupy(this);
                 cells[from.x, from.y].Occupy(null);
-                var currentPosition = new Vector3(from.x, 1, from.y);
-                var targetPosition = new Vector3(tc.x, 1, tc.y);
-
-                var currentRotation = gameObject.transform.eulerAngles;
-                var targetRotation = new Vector3(0, rotationY, 0);
-
-                var moveTime = 1f / moveSpeed;
-                float t = 0;
-                while (t < moveTime)
-                {
-                    t += Time.deltaTime;
-                    gameObject.transform.position = currentPosition + (t / moveTime) * (targetPosition - currentPosition);
-                    var f = Mathf.Min(1, 2 * t / moveTime);
-                    if (!(oldX == -1 && newX == -1))
-                    {
-                        gameObject.transform.eulerAngles = currentRotation + f * (targetRotation - currentRotation);
-                    }
-                    yield return null;
-                }
-                gameObject.transform.position = targetPosition;
-                gameObject.transform.eulerAngles = targetRotation;
             }
+
+            var currentPosition = new Vector3(from.x, 1, from.y);
+            var targetPosition = !isEmpty ? currentPosition : new Vector3(tc.x, 1, tc.y);
+
+            var currentRotation = gameObject.transform.eulerAngles;
+            var targetRotation = new Vector3(0, rotationY, 0);
+
+            var moveTime = 1f / moveSpeed;
+            float t = 0;
+            while (t < moveTime)
+            {
+                t += Time.deltaTime;
+                gameObject.transform.position = currentPosition + (t / moveTime) * (targetPosition - currentPosition);
+                var f = Mathf.Min(1, 2 * t / moveTime);
+                if (!(oldX == -1 && newX == -1))
+                {
+                    gameObject.transform.eulerAngles = currentRotation + f * (targetRotation - currentRotation);
+                }
+                yield return null;
+            }
+            gameObject.transform.position = targetPosition;
+            gameObject.transform.eulerAngles = targetRotation;
+
 
             isMoving = false;
         }
